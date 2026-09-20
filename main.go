@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	url       = "https://sin-speed.hetzner.com/10GB.bin"
+	url       = "https://speed.cloudflare.com/__down?bytes=1073741824"
 	batch int = 10
 )
 
