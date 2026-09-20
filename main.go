@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"os/exec"
+	"runtime"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -30,10 +33,10 @@ func main() {
 }
 
 func ui() {
-	lines := 1 + batch + 1
 	workerIDLength := len(strconv.Itoa(batch))
 
 	for range time.Tick(500 * time.Millisecond) {
+		callClear()
 		fmt.Println("#", time.Now().Format(time.DateTime))
 
 		var allBytesPerSec float64 = 0
@@ -49,8 +52,6 @@ func ui() {
 		allBytesPerSecAvg := allBytesPerSec / float64(batch)
 		speedAvg := formatSpeed(allBytesPerSecAvg)
 		fmt.Println("Speed Avg", speedAvg)
-
-		fmt.Printf("\033[%dA", lines)
 	}
 }
 
@@ -96,4 +97,17 @@ func formatSpeed(bytesPerSec float64) string {
 	}
 
 	return fmt.Sprintf("%15s", fmt.Sprintf("%.1f %s", bytesPerSec, units[u]))
+}
+
+func callClear() {
+	var cmd *exec.Cmd
+
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", "cls")
+	} else {
+		cmd = exec.Command("clear")
+	}
+
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
