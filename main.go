@@ -39,19 +39,18 @@ func ui() {
 		callClear()
 		fmt.Println("#", time.Now().Format(time.DateTime))
 
-		var allBytesPerSec float64 = 0
+		var totalBytesPerSec float64 = 0
 		for i := range batch {
 			workerID := fmt.Sprintf("%0*d", workerIDLength, i+1)
 			bytesPerSec := calculateSpeed(startTime[i].Load(), totalBytes[i].Load())
 			speed := formatSpeed(bytesPerSec)
 
 			fmt.Println("Worker", workerID, "Speed", speed)
-			allBytesPerSec += bytesPerSec
+			totalBytesPerSec += bytesPerSec
 		}
 
-		allBytesPerSecAvg := allBytesPerSec / float64(batch)
-		speedAvg := formatSpeed(allBytesPerSecAvg)
-		fmt.Println("Speed Avg", speedAvg)
+		totalSpeed := formatSpeed(totalBytesPerSec)
+		fmt.Println("Total Speed", totalSpeed)
 	}
 }
 
